@@ -1,16 +1,11 @@
 PROGRAM:KMAN
-If p ≠ 9088
-Then
-    Output(2,1,"ACCESS DENIED")
-
-End
-
 ClrHome
 1→k
 1→m
 16→a
 8→n
 
+// Intro animation
 For(x, 1, 11)
     If k≤5
         Output(1,k, "K")
@@ -45,42 +40,44 @@ Output(3,4,"------")
 Output(4,4,"!KMAN!")
 Output(5,4,"------")
 
-4→x
+4→x     // player's position
 5→y
-4→m
+4→m     // enemy's position
 8→n
-1→g
-0→s
-0→l
-Repeat k=45
+1→g     // found gold flag
+0→s     // score
+0→l     // enemy difficulty
+
+// main loop
+Repeat k=45                     // "clear" button
     Output(1,15,s)
-    If g=1
+    If g=1                      // found gold?
     Then
-        l+1→l
-        round(rand*7+1,0)→h
+        l+1→l                   // level up enemy
+        round(rand*7+1,0)→h     // position new gold
         round(rand*15+1,0)→i
-        Output(h,i,"*")
+        Output(h,i,"*")         // show gold
         0→g
     End
 
-    prgmKEY
-    Output(x,y," ")
-    If k=24 and y>1
+    prgmKEY                     // wait for user input, store in k
+    Output(x,y," ")             // hide player
+    If k=24 and y>1             // move left
         y-1→y
-    If k=26
+    If k=26                     // move right
         y+1→y
-    If k=25 and x>1
+    If k=25 and x>1             // move up
         x-1→x
-    If k=34 and x<8
+    If k=34 and x<8             // move down
         x+1→x
-    Output(x,y,"K")
+    Output(x,y,"K")             // show player
 
-    Output(m,n," ")
-    If rand<.49+.01l
+    Output(m,n," ")             // hide enemy
+    If rand<.49+.01l            // whether enemy moves, more likely as l incr
     Then
-        abs(m-x)→o
-        abs(n-y)→p
-        If o>p
+        abs(m-x)→o              // vertical distance from player
+        abs(n-y)→p              // horizontal distance from player
+        If o>p                  // move in direction player is farthest
         Then
             If m>x
             Then
@@ -97,16 +94,16 @@ Repeat k=45
             End
         End
     End
-    Output(m,n,"N")
+    Output(m,n,"N")             // show enemy
 
-    If x=h and y=i
+    If x=h and y=i              // if player on top of gold
     Then
-        s+1→s
-        1→g
+        s+1→s                   // incr score
+        1→g                     // set found gold flag
     End
 
-    If x=m and y=n
-        Goto 1
+    If x=m and y=n              // if player on top of enemy
+        Goto 1                  // essentially "break"
 
 End
 
@@ -118,8 +115,9 @@ Disp s
 9088→p
 Return
 
+// helper program to get user input
 PROGRAM:KEY
 0→k
 While k=0
-    getKey→k
+    getKey→k       // getKey doesn't block, so we have to spin until user input
 End
